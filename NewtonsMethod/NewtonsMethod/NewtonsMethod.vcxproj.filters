@@ -18,5 +18,13 @@
     <ClCompile Include="NewtonsMethod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tinyexpr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tinyexpr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
