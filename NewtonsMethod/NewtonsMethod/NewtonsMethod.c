@@ -7,8 +7,9 @@
 #define OK       0
 #define NO_INPUT 1
 #define TOO_LONG 2
-double a;
-double b;
+double done;
+double compute(char function[128], char deriv[128], double value, int repeat);
+double funcCompute(char function[128], double value);
 
 int main(void)
 {
@@ -58,29 +59,40 @@ int main(void)
 
 double compute(char function[128], char deriv[128], double value, int repeat)
 {
-	double done = 0;
-	while (repeat >= 0)
+	int times = repeat;
+	done = 0;
+	while (times >= 0)
 	{
-		double x;
-		te_variable vars[] = { { "x", &x } };
-		int err1;
-		te_expr *func = te_compile(function, vars, 2, &err1);
-		x = value;
-		double h1 = te_eval(func); /* Returns 5. */
-		te_free(func);
-
-		int err2;
-		te_expr *deriv = te_compile(deriv, vars, 2, &err2);
-		x = value;
-		double h2 = te_eval(deriv); /* Returns 5. */
-		te_free(deriv);
+		double h1 = funcCompute(function, repeat);
+		double h2 = funcCompute(deriv, repeat);
 
 		double s1 = h1 / h2;
 
-		double done = done - s1;
-		printf("%d", done);
+		done = done - s1;
+		printf("%.2f\n", ((signed long)(done * 100) * 0.01f));
+		times--;
 	}
 	return done;
+}
+
+double funcCompute(char function[128], double value)
+{
+	double x;
+	te_variable vars[] = { { "x", &x } };
+	int err;
+	double h1 = 0;
+	te_expr *func = te_compile(function, vars, 20, &err);
+	if (func)
+	{
+		x = value;
+		h1 = te_eval(func);
+		te_free(func);
+	}
+	else
+	{
+		printf("\t%*s^\nError near here", err - 1, "");
+	}
+	return h1;
 }
 
 
